@@ -2,30 +2,19 @@ import mongoose, { Schema } from "mongoose";
 
 export interface Details extends Document {
   address: string;
-  devnet: number;
-  testnet: number;
+  amount: number;
 }
 
 export interface Transactions extends Document {
   address: string;
-  network: Network;
   amount: number;
   timeStamp: Date;
-}
-
-enum Network {
-  devnet = "devnet",
-  testnet = "testnet",
 }
 
 const transactionsSchema: Schema<Transactions> = new mongoose.Schema({
   address: {
     type: String,
     required: [true, "Address is required"],
-  },
-  network: {
-    type: String,
-    required: [true, "Network is required"],
   },
   amount: {
     type: Number,
@@ -42,11 +31,7 @@ const DetailsSchema: Schema<Details> = new mongoose.Schema({
     type: String,
     required: [true, "Address is required"],
   },
-  devnet: {
-    type: Number,
-    default: 0,
-  },
-  testnet: {
+  amount: {
     type: Number,
     default: 0,
   },

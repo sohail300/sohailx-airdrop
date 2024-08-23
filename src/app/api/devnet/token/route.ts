@@ -14,19 +14,17 @@ export async function POST(req: NextRequest) {
     const details = await DetailsModel.findOne({ address: address });
 
     if (details) {
-      const alreadyTakenAmount = details.devnet + details.testnet;
+      const alreadyTakenAmount = details.amount;
 
       if (alreadyTakenAmount == TOKEN_LIMIT) {
-        const diff = alreadyTakenAmount - TOKEN_LIMIT;
         return NextResponse.json(
           {
             message: "You have already taken the maximum amount",
-            diff,
           },
           { status: 403 }
         );
       } else if (alreadyTakenAmount + amount > TOKEN_LIMIT) {
-        const diff = alreadyTakenAmount + amount - TOKEN_LIMIT;
+        const diff = TOKEN_LIMIT - alreadyTakenAmount;
         return NextResponse.json(
           {
             message: "Total requested amount is more than the limit",
@@ -39,19 +37,16 @@ export async function POST(req: NextRequest) {
         // tranfer tokens
         await transfer(address, amount, "devnet");
 
-        await details.updateOne(
-          { address: address },
-          { $inc: { devnet: amount } }
-        );
+        console.log("Before update - Current amount:", details.amount);
+        details.amount = details.amount + amount;
+        console.log("After update - Current amount:", details.amount);
 
         await details.save();
-
         console.log("Details saved");
 
         const newTransaction = new TransactionsModel({
           address: address,
           amount: amount,
-          network: "devnet",
           timeStamp: new Date(),
         });
         await newTransaction.save();
@@ -73,14 +68,13 @@ export async function POST(req: NextRequest) {
 
       const newDetails = new DetailsModel({
         address: address,
-        devnet: amount,
+        amount: amount,
       });
       await newDetails.save();
 
       const newTransaction = new TransactionsModel({
         address: address,
         amount: amount,
-        network: "devnet",
         timeStamp: new Date(),
       });
       await newTransaction.save();
