@@ -11,18 +11,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AlertCircle, CloudDownload, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { AlertCircle, CloudDownload } from "lucide-react";
+import { useState } from "react";
 import { api } from "@/utils/config";
 import { useToast } from "@/components/ui/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
 import { schema } from "@/types/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { any, z } from "zod";
+import { z } from "zod";
 import { X } from "lucide-react";
 import History from "@/components/History";
 import { ErrorState } from "@/types/interfaces";
+import { motion } from "framer-motion";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +78,10 @@ export default function Home() {
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 w-52 h-28 bg-fuchsia-500/80 blur-[120px]"></div>
 
       <h1 className="text-3xl sm:text-4xl font-bold text-white mb-8 sm:mb-16 text-center">
-        <span className="neon-outline">sohailX</span> Airdrop
+        {/* <span className="neon-outline"></span> */}
+        {/* <Cover></Cover>  */}
+        <Highlight className="text-white mr-4 px-4">sohailX</Highlight>
+        Airdrop
       </h1>
       {seeHistory ? (
         <History
@@ -149,6 +153,7 @@ export default function Home() {
                           placeholder="Solana Public Address"
                           {...field}
                           autoComplete="off"
+                          className="w-full"
                         />
                       </FormControl>
                       <FormMessage />
@@ -165,6 +170,7 @@ export default function Home() {
                         <Input
                           placeholder="1000"
                           {...field}
+                          className="w-full"
                           autoComplete="off"
                         />
                       </FormControl>
